@@ -1,10 +1,9 @@
 pipeline {
     agent any
     stages {
-         stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Abhinav2212/jenkinsDemo.git']]])
+                git 'https://github.com/Abhinav2212/jenkinsDemo.git'
             }
         }
         stage('Install Dependencies') {
