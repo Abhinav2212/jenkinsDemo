@@ -5,18 +5,6 @@ pipeline {
         CONTAINER_NAME = 'nextjs_container'
     }
     stages {
-        stage('Verify Docker') {
-    steps {
-        script {
-            // Example: Check if a file exists
-            if (fileExists('filename.txt')) {
-                echo 'File exists!'
-            } else {
-                error 'File does not exist!'
-            }
-        }
-    }
-}
         stage('Checkout') {
             steps {
                 script {
