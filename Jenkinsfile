@@ -22,10 +22,13 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${env.DOCKER_IMAGE}")
-                }
+                // Verify the contents of the directory before building the Docker image
+                sh 'ls -l'  // Replace with a valid ls command that suits your needs
+                docker.build("${env.DOCKER_IMAGE}")
             }
         }
+    }
+
         stage('Run Docker Container') {
             steps {
                 script {
