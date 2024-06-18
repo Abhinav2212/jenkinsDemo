@@ -3,9 +3,15 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'nextjs-app:latest'
         CONTAINER_NAME = 'nextjs_container'
-        GITHUB_CREDENTIALS_ID = 'github-token' // Update with your credentials ID
     }
     stages {
+        stage('Verify Docker') {
+            steps {
+                script {
+                    sh 'docker --version'
+                }
+            }
+        }
         stage('Checkout') {
             steps {
                 script {
