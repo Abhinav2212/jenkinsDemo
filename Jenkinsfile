@@ -6,12 +6,17 @@ pipeline {
     }
     stages {
         stage('Verify Docker') {
-            steps {
-                script {
-                    sh 'docker --version'
-                }
+    steps {
+        script {
+            // Example: Check if a file exists
+            if (fileExists('filename.txt')) {
+                echo 'File exists!'
+            } else {
+                error 'File does not exist!'
             }
         }
+    }
+}
         stage('Checkout') {
             steps {
                 script {
