@@ -1,35 +1,56 @@
 pipeline {
     agent any
+    
     environment {
         DOCKER_IMAGE = 'nextjs-app:latest'
         CONTAINER_NAME = 'nextjs_container'
     }
+    
     stages {
-        stage('Checkout') {
+        stage("Restore Yarn packages") {
             steps {
-                script {
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: '*/main']],
-                        userRemoteConfigs: [[
-                            url: 'https://github.com/Abhinav2212/jenkinsDemo.git',
-                            credentialsId: "${env.GITHUB_CREDENTIALS_ID}"
-                        ]]
-                    ])
+                // Writes lock-file to cache based on the GIT_COMMIT hash
+                writeFile file: "next-lock.cache", text: "$GIT_COMMIT"
+     
+                cache(caches: [
+                    arbitraryFileCache(
+                        path: "node_modules",
+                        includes: "**/*",
+                        cacheValidityDecidingFile: "package.json"
+                    )
+                ]) {
+                    sh "yarn install"
                 }
             }
         }
-        stage('Build Docker Image') {
+        
+        stage("Build") {
             steps {
-                script {
-                // Verify the contents of the directory before building the Docker image
-                sh 'ls -l'  // Replace with a valid ls command that suits your needs
-                docker.build("${env.DOCKER_IMAGE}")
+                // Writes lock-file to cache based on the GIT_COMMIT hash
+                writeFile file: "next-lock.cache", text: "$GIT_COMMIT"
+     
+                cache(caches: [
+                    arbitraryFileCache(
+                        path: ".next/cache",
+                        includes: "**/*",
+                        cacheValidityDecidingFile: "next-lock.cache"
+                    )
+                ]) {
+                    // aka `next build`
+                    sh "yarn build"
+                }
             }
         }
-    }
-
-        stage('Run Docker Container') {
+        
+        stage("Build Docker Image") {
+            steps {
+                script {
+                    docker.build("${env.DOCKER_IMAGE}")
+                }
+            }
+        }
+        
+        stage("Run Docker Container") {
             steps {
                 script {
                     def container = sh(script: "docker ps -q -f name=${env.CONTAINER_NAME}", returnStdout: true).trim()
@@ -42,6 +63,7 @@ pipeline {
             }
         }
     }
+    
     post {
         always {
             cleanWs()
