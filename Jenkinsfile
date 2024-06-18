@@ -1,30 +1,41 @@
 pipeline {
     agent any
+    environment {
+        DOCKER_IMAGE = 'nextjs-app:latest'
+        CONTAINER_NAME = 'nextjs_container'
+    }
     stages {
         stage('Checkout') {
             steps {
                 git 'https://github.com/Abhinav2212/jenkinsDemo.git'
             }
         }
-        stage('Install Dependencies') {
+        stage('Build Docker Image') {
             steps {
-                sh 'yarn install'
+                script {
+                    docker.build("${env.DOCKER_IMAGE}")
+                }
             }
         }
-        stage('Build') {
+        stage('Run Docker Container') {
             steps {
-                sh 'yarn build'
+                script {
+                    // Stop and remove the previous container if it exists
+                    def container = sh(script: "docker ps -q -f name=${env.CONTAINER_NAME}", returnStdout: true).trim()
+                    if (container) {
+                        sh "docker stop ${env.CONTAINER_NAME}"
+                        sh "docker rm ${env.CONTAINER_NAME}"
+                    }
+
+                    // Run the new container
+                    sh "docker run -d -p 3000:3000 --name ${env.CONTAINER_NAME} ${env.DOCKER_IMAGE}"
+                }
             }
         }
-        stage('Test') {
-            steps {
-                sh 'yarn test'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh 'yarn deploy'
-            }
+    }
+    post {
+        always {
+            cleanWs()
         }
     }
 }

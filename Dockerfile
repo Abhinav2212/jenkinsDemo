@@ -1,23 +1,37 @@
 # Use the official Node.js image as the base image
-FROM node:18-alpine
+FROM node:20.3.1
 
-# Create and change to the app directory
+# Install required tools
+# Add Yarn GPG key and repository
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+    RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
+    
+    # Install Yarn v1.22.19
+    RUN apt-get update && apt-get install -y yarn=1.22.19-1
+    
+    # Verify Yarn installation
+    RUN yarn --version
+
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy application dependency manifests to the container image
+# Copy package.json and yarn.lock
 COPY package.json yarn.lock ./
 
-# Install production dependencies
-RUN yarn install --production
+# Install dependencies using Yarn
+RUN yarn install
 
-# Copy the local code to the container image
+# Copy the rest of the application code
 COPY . .
 
-# Build the Next.js application
+# Build the Next.js project
 RUN yarn build
 
-# Expose the port the app runs on
+# Install PM2 globally
+RUN yarn global add pm2
+
+# Expose port 3000
 EXPOSE 3000
 
-# Run the web service on container startup
-CMD ["yarn", "start"]
+# Start the Next.js application using PM2 and ecosystem file
+CMD ["pm2-runtime", "start", "ecosystem.config.js", "--env", "production"]
