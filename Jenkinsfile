@@ -3,6 +3,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'nextjs-app:latest'
         CONTAINER_NAME = 'nextjs_container'
+        GITHUB_CREDENTIALS_ID = 'github-token' 
     }
     stages {
         stage('Checkout') {
