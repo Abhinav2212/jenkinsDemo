@@ -5,7 +5,7 @@ pipeline {
             steps {
                 script {
                     // Execute your install script
-                    yarn install
+                    sh "yarn install"
                     
                 }
             }
@@ -15,7 +15,7 @@ pipeline {
             steps {
                 script {
                     // Execute your build script
-                    yarn build
+                    sh "yarn build"
                     //./mvnw package -Dquarkus.package.type=uber-jar
 
                 }
@@ -25,7 +25,7 @@ pipeline {
             steps {
                 // Run docker-compose up
                 script {
-                    pm2 restart ecosystem.config.js --  env_production
+                    sh "pm2 restart ecosystem.config.js --  env_production"
                 }
             }
         }
