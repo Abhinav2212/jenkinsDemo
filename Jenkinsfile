@@ -19,6 +19,10 @@ pipeline {
         }
         stage('Yarn install') {
             steps {
+                 // Debugging script
+                sh 'printenv'
+                sh 'pwd'
+                sh 'ls -la'
                 // Install yarn globally if not already installed
                 sh 'npm install -g yarn || { echo "Failed to install yarn"; exit 1; }'
 
@@ -30,17 +34,7 @@ pipeline {
             }
         }
 
-        stage('Yarn install') {
-            steps {
-                // Debugging script
-                sh 'printenv'
-                sh 'pwd'
-                sh 'ls -la'
-                // Execute your install script
-                sh "npm install -g yarn"
-                sh 'yarn install'
-            }
-        }
+       
         stage('Build') {
             steps {
                     sh 'yarn build'
