@@ -1,22 +1,33 @@
 pipeline {
     agent any
-    
-   
-    
     stages {
-        stage("Yarn Install") {
-           sh "yarn install"
+        stage('Yarn install') {
+            steps {
+                script {
+                    // Execute your install script
+                    yarn install
+                    
+                }
+            }
         }
-        
-        stage("Build") {
-          
-            sh "yarn build"
-               
+
+        stage('Build') {
+            steps {
+                script {
+                    // Execute your build script
+                    yarn build
+                    //./mvnw package -Dquarkus.package.type=uber-jar
+
+                }
+            }
         }
-        
-        
+        stage('Run') {
+            steps {
+                // Run docker-compose up
+                script {
+                    pm2 restart ecosystem.config.js --  env_production
+                }
+            }
         }
     }
-    
-  
-
+}
