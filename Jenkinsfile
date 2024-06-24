@@ -3,6 +3,10 @@ pipeline {
     stages {
         stage('Yarn install') {
             steps {
+                // Debugging script
+                sh 'printenv'
+                sh 'pwd'
+                sh 'ls -la'
                 // Execute your install script
                 sh "npm install -g yarn"
                 sh 'yarn install'
