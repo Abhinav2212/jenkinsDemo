@@ -7,6 +7,7 @@ pipeline {
                 // Check if yarn is installed
                 sh 'which yarn || { echo "yarn is not installed"; exit 1; }'
                 sh 'yarn --version'
+                sh 'node -v'
             }
         }
         stage('Yarn install') {
