@@ -86,6 +86,9 @@ pipeline {
                     
                     # Install PM2 globally using Yarn
                     yarn global add pm2
+                     # Add Yarn global binaries to PATH
+                    export PATH="$(yarn global bin):$PATH"
+                    
                     
                     # Verify PM2 installation
                     pm2 -v
