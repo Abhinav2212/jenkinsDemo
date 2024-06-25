@@ -4,10 +4,6 @@ pipeline {
     stages {
          stage('Check Tools') {
             steps {
-                // Check if npm is installed
-                sh 'which npm || { echo "npm is not installed"; exit 1; }'
-                sh 'npm --version'
-
                 // Check if yarn is installed
                 sh 'which yarn || { echo "yarn is not installed"; exit 1; }'
                 sh 'yarn --version'
