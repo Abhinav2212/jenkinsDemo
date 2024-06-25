@@ -7,10 +7,6 @@ pipeline {
                 // Check if yarn is installed
                 sh 'which yarn || { echo "yarn is not installed"; exit 1; }'
                 sh 'yarn --version'
-
-                // Check if pm2 is installed
-                sh 'which pm2 || { echo "pm2 is not installed"; exit 1; }'
-                sh 'pm2 --version'
             }
         }
         stage('Yarn install') {
@@ -20,7 +16,7 @@ pipeline {
                 sh 'pwd'
                 sh 'ls -la'
                 // Install yarn globally if not already installed
-                sh 'npm install -g yarn || { echo "Failed to install yarn"; exit 1; }'
+                // sh 'npm install -g yarn || { echo "Failed to install yarn"; exit 1; }'
 
                 // Verify yarn installation
                 sh 'yarn --version || { echo "Yarn installation failed"; exit 1; }'
