@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     stages {
-         stage('Check Tools') {
-            stage('Install Node.js via NVM') {
+        stage('Install Node.js via NVM') {
             steps {
                 sh '''
                     # Install NVM if it is not already installed
@@ -27,6 +26,9 @@ pipeline {
                 '''
             }
         }
+        
+        stage('Check Tools') {
+            
             steps {
                 // Check if yarn is installed
                 sh 'which yarn || { echo "yarn is not installed"; exit 1; }'
