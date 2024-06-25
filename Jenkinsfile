@@ -65,8 +65,15 @@ pipeline {
        
         stage('Build') {
             steps {
-                    sh 'yarn build'
-                    //./mvnw package -Dquarkus.package.type=uber-jar
+                sh '''
+                    # Source NVM again in this stage
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    nvm use 20.3.1
+                    
+                    # Run the build command
+                    yarn build
+                '''
             }
         }
         stage('Run') {
