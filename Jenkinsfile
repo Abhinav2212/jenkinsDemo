@@ -76,9 +76,23 @@ pipeline {
                 '''
             }
         }
-        stage('Run') {
+        stage('Install PM2 and Restart App') {
             steps {
-                    sh 'pm2 restart ecosystem.config.js --  env_production'
+                sh '''
+                    # Ensure NVM and Node.js are sourced
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    nvm use 20.3.1
+                    
+                    # Install PM2 globally using Yarn
+                    yarn global add pm2
+                    
+                    # Verify PM2 installation
+                    pm2 -v
+                    
+                    # Restart the application using PM2
+                    pm2 restart ecosystem.config.js --env production
+                '''
             }
         }
     }
