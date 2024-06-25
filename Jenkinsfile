@@ -3,11 +3,34 @@ pipeline {
 
     stages {
          stage('Check Tools') {
+            stage('Install Node.js via NVM') {
+            steps {
+                sh '''
+                    # Install NVM if it is not already installed
+                    if ! command -v nvm &> /dev/null
+                    then
+                        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+                    fi
+                    
+                    # Source NVM
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    
+                    # Install and use the desired Node.js version
+                    nvm install 20.3.1
+                    nvm use 20.3.1
+                    nvm alias default 20.3.1
+                    
+                    # Verify Node.js and NPM versions
+                    node -v
+                    npm -v
+                '''
+            }
+        }
             steps {
                 // Check if yarn is installed
                 sh 'which yarn || { echo "yarn is not installed"; exit 1; }'
                 sh 'yarn --version'
-                sh 'nvm ls'
                 sh 'node -v'
             }
         }
