@@ -49,7 +49,16 @@ pipeline {
                 sh 'yarn --version || { echo "Yarn installation failed"; exit 1; }'
 
                 // Execute yarn install
-                sh 'yarn install'
+                sh '''
+                    # Source NVM again in this stage
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    nvm use 20.3.1
+                    
+                    # Clear Yarn cache and install dependencies
+                    yarn cache clean
+                    yarn install
+                '''
             }
         }
 
