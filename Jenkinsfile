@@ -1,6 +1,28 @@
 pipeline {
     agent any
 
+     stage('Check Docker') {
+            steps {
+                sh '''
+                    # Check if Docker is installed
+                    if ! command -v docker &> /dev/null
+                    then
+                        echo "Docker is not installed. Please install Docker and try again."
+                        exit 1
+                    fi
+
+                    # Check if Docker daemon is running
+                    docker info > /dev/null 2>&1
+                    if [ $? -ne 0 ]; then
+                        echo "Docker daemon is not running. Please start Docker and try again."
+                        exit 1
+                    fi
+
+                    echo "Docker is installed and running."
+                '''
+            }
+        }
+
     stages {
         stage('Build Docker Image') {
             steps {
