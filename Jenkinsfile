@@ -20,7 +20,7 @@ pipeline {
                         echo "Docker daemon is running."
                     else
                         echo "Starting Docker daemon..."
-                        sudo systemctl start docker
+                        sudo -S systemctl start docker
                         # Give it some time to start
                         sleep 5
                         if docker info > /dev/null 2>&1
