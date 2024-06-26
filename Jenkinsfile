@@ -1,30 +1,31 @@
 pipeline {
     agent any
 
-    
-
     stages {
-         stage('Check Docker') {
+        stage('Check Docker') {
             steps {
                 sh '''
                     # Check if Docker is installed
-                    if ! command -v docker &> /dev/null
+                    if command -v docker &> /dev/null
                     then
+                        echo "Docker is installed at $(command -v docker)"
+                    else
                         echo "Docker is not installed. Please install Docker and try again."
                         exit 1
                     fi
 
                     # Check if Docker daemon is running
-                    docker info > /dev/null 2>&1
-                    if [ $? -ne 0 ]; then
+                    if docker info > /dev/null 2>&1
+                    then
+                        echo "Docker daemon is running."
+                    else
                         echo "Docker daemon is not running. Please start Docker and try again."
                         exit 1
                     fi
-
-                    echo "Docker is installed and running."
                 '''
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -38,6 +39,7 @@ pipeline {
                 }
             }
         }
+
         stage('Run Docker Container') {
             steps {
                 script {
