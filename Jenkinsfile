@@ -1,7 +1,10 @@
 pipeline {
     agent any
 
-     stage('Check Docker') {
+    
+
+    stages {
+         stage('Check Docker') {
             steps {
                 sh '''
                     # Check if Docker is installed
@@ -22,8 +25,6 @@ pipeline {
                 '''
             }
         }
-
-    stages {
         stage('Build Docker Image') {
             steps {
                 script {
