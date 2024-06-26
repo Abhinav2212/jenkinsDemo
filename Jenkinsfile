@@ -19,8 +19,17 @@ pipeline {
                     then
                         echo "Docker daemon is running."
                     else
-                        echo "Docker daemon is not running. Please start Docker and try again."
-                        exit 1
+                        echo "Starting Docker daemon..."
+                        sudo systemctl start docker
+                        # Give it some time to start
+                        sleep 5
+                        if docker info > /dev/null 2>&1
+                        then
+                            echo "Docker daemon started successfully."
+                        else
+                            echo "Docker daemon is not running. Please start Docker and try again."
+                            exit 1
+                        fi
                     fi
                 '''
             }
