@@ -1,7 +1,15 @@
 pipeline {
     agent any
-
+    
     stages {
+    stage('Print User and Check Permissions') {
+            steps {
+                script {
+                    sh 'whoami'
+                    sh 'ls -ld /home/Desktop/New Folder'
+                }
+            }
+        }
         stage('Check Docker') {
             steps {
                 sh '''
