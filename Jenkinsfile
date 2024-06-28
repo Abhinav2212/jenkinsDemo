@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     sh 'whoami'
-                    sh 'ls -ld /home/Desktop/New Folder'
+                    sh 'ls -ld /home/abhinav/Desktop/abc'
                 }
             }
         }
